@@ -22,44 +22,21 @@ public class PrintAbc {
 // 共享资源
 class MyResource{
     private volatile int flag = 0;
-//    private static final int total = 10;
+    private static final int total = 10;
 
-    public synchronized void PrintA(){
-        while (flag % 3 == 0){
-            System.out.println(Thread.currentThread().getName()+" PrintA ");
+    public synchronized void printABC(int val){
+        for(int i=0;i<total;i++){
+            while (flag % 3 != val){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println(Thread.currentThread().getName()+" Print"+(val == 0 ? "A" : val == 1 ? "B" : "C"));
             flag++;
             notifyAll();
-        }
-        try {
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public synchronized void PrintB(){
-        while (flag % 3 == 1){
-            System.out.println(Thread.currentThread().getName()+" PrintB ");
-            flag++;
-            notifyAll();
-        }
-        try {
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public synchronized void PrintC(){
-        while (flag % 3 == 2){
-            System.out.println(Thread.currentThread().getName()+" PrintC ");
-            flag++;
-            notifyAll();
-        }
-        try {
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -76,9 +53,7 @@ class ThreadA extends Thread{
 
     @Override
     public void run() {
-        for (int i=0;i<10;i++){
-            myResource.PrintA();
-        }
+        myResource.printABC(0);
     }
 }
 
@@ -93,9 +68,7 @@ class ThreadB extends Thread{
 
     @Override
     public void run() {
-        for (int i=0;i<10;i++){
-            myResource.PrintB();
-        }
+        myResource.printABC(1);
     }
 }
 
@@ -110,43 +83,6 @@ class ThreadC extends Thread{
 
     @Override
     public void run() {
-        for (int i=0;i<10;i++){
-            myResource.PrintC();
-        }
+        myResource.printABC(2);
     }
 }
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
-//    线程C PrintC
-
-//    线程A PrintA
-//    线程B PrintB
